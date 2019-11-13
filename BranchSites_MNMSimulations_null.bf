@@ -1,6 +1,6 @@
 outfile_path = "knownGene.uc001hmo.1.1.testHyPhyBS.null.out";
 filepath = "knownGene.uc001hmo.1.1.testHyPhyBS";
-LoadFunctionLibrary("../../res/TemplateBatchFiles/TemplateModels/chooseGeneticCode.def", {"0" : "Universal"});
+LoadFunctionLibrary("chooseGeneticCode.def", {"0" : "Universal"});
 DataSet ds = ReadDataFile (filepath);
 DataSetFilter filteredData = CreateFilter (ds,3,"","","TAA,TAG,TGA");
 coding_path = LAST_FILE_PATH; /*save the last file path if you wish*/
@@ -447,8 +447,13 @@ while (1)
 
 LIKELIHOOD_FUNCTION_OUTPUT = 5;
 fprintf (outfile_path, lf);
-
 fprintf(outfile_path, "mles:", mles);
+
+simulation.matrix  = {
+    {"A","C","G","T"}
+    {"3", "TAA,TAG,TGA", "", ""}
+};
+
 
 for (simCounter = 1; simCounter<51; simCounter = simCounter+1)
 {
@@ -456,7 +461,7 @@ for (simCounter = 1; simCounter<51; simCounter = simCounter+1)
 	
  	
 	/*Note: change the following line to test on alignment of any length, instead of 5000*/
-	DataSet simulatedData = Simulate (givenTree,codonFreqs,characters,5000);
+	DataSet simulatedData = Simulate (givenTree,codonFreqs,simulation.matrix,5000);
 
 	DataSetFilter filtered_simulatedData = CreateFilter (simulatedData,3,"","","TAA,TAG,TGA");
         DATA_FILE_PRINT_FORMAT = VALUE;
